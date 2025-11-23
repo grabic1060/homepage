@@ -1,0 +1,229 @@
+/* --- CSS 변수 설정 (색상 및 폰트) --- */
+:root {
+    --bg-color: #f8f9fa;       /* 전체 배경색 (연한 회색) */
+    --text-primary: #333333;   /* 기본 글자색 (진한 회색) */
+    --text-secondary: #666666; /* 보조 글자색 (중간 회색) */
+    --accent-color: #3b82f6;   /* 포인트 색상 (파란색 계열) */
+    --card-bg: #ffffff;        /* 카드 배경색 (흰색) */
+    --border-radius: 12px;     /* 둥근 모서리 정도 */
+    --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+}
+
+/* --- 기본 초기화 및 공통 스타일 --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- 레이아웃 컨테이너 --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: 100vh; /* 화면 전체 높이 사용 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 헤더 영역 --- */
+.sitemap-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.sitemap-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.sitemap-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* --- 메인 그리드 레이아웃 (반응형 핵심) --- */
+.sitemap-grid {
+    display: grid;
+    /* 화면 너비에 따라 자동으로 열 개수 조절 (최소 280px 너비 유지) */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px; /* 카드 사이 간격 */
+    flex: 1; /* footer를 하단으로 밀어내기 위함 */
+}
+
+/* --- 사이트맵 카드 스타일 --- */
+.sitemap-card {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* 부드러운 그림자 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.sitemap-card:hover {
+    transform: translateY(-5px); /* 호버 시 살짝 위로 올라가는 효과 */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: #e5e7eb;
+}
+
+.sitemap-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color); /* 제목 하단 포인트 라인 */
+    display: inline-block;
+}
+
+/* --- 링크 목록 스타일 --- */
+.sitemap-card ul li {
+    margin-bottom: 12px;
+}
+
+.sitemap-card ul li a {
+    color: var(--text-secondary);
+    display: block;
+    padding: 5px 0;
+    font-weight: 500;
+}
+
+.sitemap-card ul li a:hover {
+    color: var(--accent-color); /* 호버 시 포인트 색상으로 변경 */
+    padding-left: 5px; /* 호버 시 살짝 오른쪽으로 이동 */
+}
+
+/* --- 푸터 영역 --- */
+.sitemap-footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.home-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--text-primary);
+    color: white;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.home-button:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+
+/* --- JS 애니메이션을 위한 초기 상태 및 클래스 --- */
+/* 처음에 안 보이게 설정 */
+.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* JS가 붙여줄 클래스 (보이게 설정) */
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- 모바일 최적화 (작은 화면) --- */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px 15px;
+    }
+    
+    .sitemap-header h1 {
+        font-size: 2rem;
+    }
+
+    .sitemap-card {
+        padding: 25px;
+    }
+}
+
+.sitemap-card {
+    /* 카드가 겹치지 않게 위치 기준점 설정 */
+    position: relative; 
+    z-index: 1; 
+}
+
+.sitemap-card ul li a {
+    /* 링크를 카드보다 더 위로 띄움 (중요) */
+    position: relative;
+    z-index: 10; 
+    cursor: pointer; /* 마우스 올렸을 때 손가락 모양 강제 */
+}
+
+/* --- index.css 맨 아래에 추가 --- */
+
+/* 1. 다크 모드 색상 테마 정의 */
+body.dark-mode {
+    --bg-color: #121212;       /* 아주 어두운 배경 */
+    --text-primary: #e0e0e0;   /* 밝은 회색 글자 */
+    --text-secondary: #a0a0a0; /* 중간 회색 글자 */
+    --card-bg: #1e1e1e;        /* 카드 배경 (배경보다 살짝 밝게) */
+    --accent-color: #60a5fa;   /* 포인트 색상 (조금 더 밝은 파랑) */
+    /* 그림자를 다크모드에 맞게 은은하게 조정 */
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* 기존 sitemap-card에 그림자 변수 적용을 위해 살짝 수정 필요하지만, 
+   그냥 아래 코드를 추가하면 덮어씌워집니다. */
+body.dark-mode .sitemap-card {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid #333; /* 카드 테두리를 살짝 줘서 구분감 줌 */
+}
+
+/* 2. 토글 버튼 스타일 (우측 상단 고정) */
+.theme-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* 가장 위에 둥둥 떠있게 */
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--text-secondary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.theme-btn:hover {
+    transform: scale(1.1) rotate(15deg); /* 마우스 올리면 살짝 커지고 회전 */
+    border-color: var(--accent-color);
+}
