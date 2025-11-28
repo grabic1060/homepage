@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마인크래프트 서버 안내</title>
+    <link rel="stylesheet" href="index.css?v=1.2">
+    <style>
+        /* --- 변수 설정 (기존 디자인 시스템 반영) --- */
+        :root {
+            --accent-hover: #059669;
+            --border-color: #e4e4e7;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* --- 다크 모드 지원 --- */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --border-color: #3f3f46;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        /* --- 기본 스타일 --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* --- 컨테이너 --- */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* --- 헤더 --- */
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* --- 카드 컴포넌트 --- */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--card-bg);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- 서버 주소 복사 영역 --- */
+        .server-address-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: var(--bg-color);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            border: 2px dashed var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .address-text {
+            font-family: monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .copy-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* --- 서버 정보 리스트 --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            background-color: var(--bg-color);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* --- 접속 가이드 --- */
+        .guide-list {
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .guide-list li {
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 16px;
+        }
+
+        .guide-list li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--bg-color);
+            color: var(--text-secondary);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .guide-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- 하단 버튼 --- */
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .home-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .home-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* --- 알림 토스트 (복사 성공 시) --- */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <button id="themeToggle" class="theme-btn" aria-label="다크 모드 전환">
+    🌙
+    </button>
+    <button id="home-button" onclick="location.href='/'" aria-label="홈으로 이동">
+    🏠
+    </button>
+    <div class="container">
+        <header>
+            <h1>Yoonsrv 마이크래프트 서버</h1>
+            <p class="subtitle">자유 야생 서버</p>
+        </header>
+
+        <div class="card">
+            <h2>🌍 서버 주소</h2>
+            <div class="server-address-box">
+                <span class="address-text" id="serverAddress">mc.yoonsrv.com</span>
+                <button class="copy-btn" onclick="copyToClipboard()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    주소 복사하기
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>ℹ️ 서버 정보</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">플레이어 제한</div>
+                    <div class="info-value">최대 10명</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">게임 모드</div>
+                    <div class="info-value">야생 (Survival)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">운영 시간</div>
+                    <div class="info-value">24시간 (상시)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">규칙</div>
+                    <div class="info-value">없음</div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="sitemap-footer">
+            <p>&copy; <span id="currentYear"></span> Yoonsrv. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div id="toast">주소가 클립보드에 복사되었습니다!</div>
+
+    <script src="index.js?v=1.2"></script>
+    <script>
+        function copyToClipboard() {
+            const addressText = document.getElementById('serverAddress').innerText;
+            
+            navigator.clipboard.writeText(addressText).then(() => {
+                showToast();
+            }).catch(err => {
+                console.error('복사 실패:', err);
+                alert('복사에 실패했습니다. 직접 주소를 입력해주세요.');
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+    </script>
+
+</body>
+</html>
